@@ -1,6 +1,6 @@
 # Ansible Role: Lighthouse
 
-[![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-lighthouse--role-blue.svg)](https://galaxy.ansible.com/stomple/lighthouse-role)
+[![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-lighthouse--role-blue.svg)](https://galaxy.ansible.com/stomplego/lighthouse-role)
 
 ## Описание
 
@@ -32,7 +32,7 @@
   hosts: all
   become: yes
   roles:
-    - role: stomple.lighthouse-role
+    - role: stomplego.lighthouse-role
 
 ### Переопределение переменных
 
@@ -44,38 +44,17 @@
       vars:
         lighthouse_nginx_port: 9090
         lighthouse_install_dir: /opt/lighthouse
-        lighthouse_version: "v1.0.0"
-
-### Использование с ClickHouse
-```yaml
----
-- hosts: clickhouse_servers
-  roles:
-    - role: clickhouse-role
-    - role: lighthouse-role
-      vars:
-        lighthouse_nginx_port: 8080
-        lighthouse_nginx_server_name: "clickhouse.example.com"
 
 ### Шаблоны
-Роль включает один шаблон в директории templates/:
+Роль включает шаблон lighthouse.conf.j2 в директории templates/:
 
-Шаблон	Назначение
-lighthouse.conf.j2	Конфигурационный файл nginx для Lighthouse
-
-### Содержимое шаблона
 ```nginx
 ---
 server {
     listen {{ lighthouse_nginx_port }};
     server_name {{ lighthouse_nginx_server_name }};
-
-    access_log /var/log/nginx/lighthouse.access.log;
-    error_log /var/log/nginx/lighthouse.error.log;
-
     location / {
         root {{ lighthouse_install_dir }};
-        index index.html index.htm;
-        try_files $uri $uri/ =404;
+        index index.html;
     }
 }
